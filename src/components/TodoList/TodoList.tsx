@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React from "react";
+import React, { useMemo } from "react";
 import { useAppSelector } from "../../app/store";
 import { useDispatch } from "react-redux";
 import { currentTodoSlice } from "../../features/currentTodo";
@@ -13,30 +12,31 @@ export const TodoList: React.FC = () => {
 
   const todos = useAppSelector((state) => state.todos);
 
-  const filteredTodos = (() => {
-    let filteredTodos = todos;
+  const filteredTodos = useMemo(() => {
+    let visibleTodos = todos;
+
     switch (status) {
       case "active":
-        filteredTodos = todos.filter((todo) => !todo.completed);
+        visibleTodos = todos.filter((todo) => !todo.completed);
         break;
       case "completed":
-        filteredTodos = todos.filter((todo) => todo.completed);
+        visibleTodos = todos.filter((todo) => todo.completed);
         break;
       default:
-        filteredTodos = todos;
+        visibleTodos = todos;
     }
 
-    query !== ""
-      ? (filteredTodos = filteredTodos.filter((filteredTodo) =>
-          filteredTodo.title.toLowerCase().includes(query.toLowerCase()),
-        ))
-      : filteredTodos;
+    if (query !== "") {
+      visibleTodos = visibleTodos.filter((todo) =>
+        todo.title.toLowerCase().includes(query.toLowerCase()),
+      );
+    }
 
-    return filteredTodos;
-  })();
+    return visibleTodos;
+  }, [todos, status, query]);
 
-  const checkCurrentTodo = (currentTodo: Todo) =>
-    dispatch(currentTodoSlice.actions.checkCurrentTodo(currentTodo));
+  const checkCurrentTodo = (todoToSelect: Todo) =>
+    dispatch(currentTodoSlice.actions.checkCurrentTodo(todoToSelect));
   const unCheckCurrentTodo = () =>
     dispatch(currentTodoSlice.actions.unCheckCurrentTodo());
 
@@ -99,14 +99,11 @@ export const TodoList: React.FC = () => {
                   className="button"
                   type="button"
                   onClick={() => {
-                    currentTodo?.id !== todo.id
-                      ? checkCurrentTodo({
-                          id: todo.id,
-                          title: todo.title,
-                          completed: todo.completed,
-                          userId: todo.userId,
-                        })
-                      : unCheckCurrentTodo();
+                    if (currentTodo?.id !== todo.id) {
+                      checkCurrentTodo(todo);
+                    } else {
+                      unCheckCurrentTodo();
+                    }
                   }}
                 >
                   <span className="icon">

@@ -8,12 +8,7 @@ export const currentTodoSlice = createSlice({
   initialState,
   reducers: {
     checkCurrentTodo(_, { payload }: PayloadAction<Todo>) {
-      return {
-        id: payload.id,
-        title: payload.title,
-        completed: payload.completed,
-        userId: payload.userId,
-      };
+      return payload;
     },
     unCheckCurrentTodo() {
       return null;

@@ -16,13 +16,27 @@ export const TodoModal: React.FC = () => {
   const [user, setUser] = useState<null | User>(null);
 
   useEffect(() => {
-    async function loadUser() {
-      const data = currentTodo ? await getUser(currentTodo.userId) : null;
+    let isActive = true;
 
-      setUser(data);
+    async function loadUser() {
+      if (!currentTodo) {
+        setUser(null);
+
+        return;
+      }
+
+      const data = await getUser(currentTodo.userId);
+
+      if (isActive) {
+        setUser(data);
+      }
     }
 
     loadUser();
+
+    return () => {
+      isActive = false;
+    };
   }, [currentTodo]);
 
   return (
@@ -63,7 +77,7 @@ export const TodoModal: React.FC = () => {
               )}
 
               {" by "}
-              <a href={user?.email}>{user?.name}</a>
+              <a href={`mailto:${user?.email}`}>{user?.name}</a>
             </p>
           </div>
         </div>
