@@ -5,10 +5,12 @@ import { filterSlice } from "../../features/filter";
 export const TodoFilter: React.FC = () => {
   const dispatch = useDispatch();
 
-  const changeFilterStatus = (filerStatus: string) => dispatch(filterSlice.actions.changeFilterStatus(filerStatus));
-  const changeFilterQuery = (filerQuery: string) => dispatch(filterSlice.actions.changeFilterQuery(filerQuery));
+  const changeFilterStatus = (filerStatus: string) =>
+    dispatch(filterSlice.actions.changeFilterStatus(filerStatus));
+  const changeFilterQuery = (filerQuery: string) =>
+    dispatch(filterSlice.actions.changeFilterQuery(filerQuery));
 
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
 
   return (
     <form
@@ -17,7 +19,10 @@ export const TodoFilter: React.FC = () => {
     >
       <p className="control">
         <span className="select">
-          <select data-cy="statusSelect" onChange={(e) => changeFilterStatus(e.target.value)}>
+          <select
+            data-cy="statusSelect"
+            onChange={(e) => changeFilterStatus(e.target.value)}
+          >
             <option value="all">All</option>
             <option value="active">Active</option>
             <option value="completed">Completed</option>
@@ -32,36 +37,29 @@ export const TodoFilter: React.FC = () => {
           className="input"
           placeholder="Search..."
           value={value}
-
           onChange={(e) => {
-            setValue(e.target.value)
-            changeFilterQuery(e.target.value)
+            setValue(e.target.value);
+            changeFilterQuery(e.target.value);
           }}
         />
         <span className="icon is-left">
           <i className="fas fa-magnifying-glass" />
         </span>
 
-
-          {value !== '' &&
-          
+        {value !== "" && (
           <span className="icon is-right" style={{ pointerEvents: "all" }}>
-          {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-          <button
-            data-cy="clearSearchButton"
-            type="button"
-            className="delete"
-
-            onClick={() => {
-              setValue('')
-              changeFilterQuery('')
-            }}
-            
-          />
-        </span>
-
-          }
-        
+            {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
+            <button
+              data-cy="clearSearchButton"
+              type="button"
+              className="delete"
+              onClick={() => {
+                setValue("");
+                changeFilterQuery("");
+              }}
+            />
+          </span>
+        )}
       </p>
     </form>
   );

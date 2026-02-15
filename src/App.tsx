@@ -9,30 +9,25 @@ import { useDispatch } from "react-redux";
 import { todosSlice } from "./features/todos";
 
 export const App = () => {
-  const currentTodo = useAppSelector(state => state.currentTodo);
+  const currentTodo = useAppSelector((state) => state.currentTodo);
 
-  const todos = useAppSelector(state => state.todos);
+  const todos = useAppSelector((state) => state.todos);
   const dispatch = useDispatch();
 
-  const getTodosStore = (currentTodo: Todo[]) => dispatch(todosSlice.actions.getTodosStore(currentTodo));
+  const getTodosStore = (todo: Todo[]) =>
+    dispatch(todosSlice.actions.getTodosStore(todo));
 
-  
-  
   useEffect(() => {
     async function loadTodos() {
       const data = await getTodos();
+
       getTodosStore(data);
     }
 
     loadTodos();
+  }, [getTodosStore]);
 
-    
-  }, []);
-
-
-    
   return (
-
     <>
       <div className="section">
         <div className="container">
@@ -52,5 +47,5 @@ export const App = () => {
 
       {currentTodo && <TodoModal />}
     </>
-  )
+  );
 };
